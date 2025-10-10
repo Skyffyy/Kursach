@@ -29,26 +29,26 @@ int main(int argc, char *argv[]) {
     loadDatabase(students, &count);
 
     if (argc < 2) {
-        printf("Usage: ./main !command\n");
-        printf("Use ./main !help to see available commands.\n");
+        printf("Usage: ./main command\n");
+        printf("Use ./main help to see available commands.\n");
         return 0;
     }
 
-    if (strEqual(argv[1], "!help")) {
+    if (strEqual(argv[1], "help")) {
         showHelp();
     }
-    else if (strEqual(argv[1], "!list")) {
+    else if (strEqual(argv[1], "list")) {
         listStudents(students, count);
     }
-    else if (strEqual(argv[1], "!add")) {
+    else if (strEqual(argv[1], "add")) {
         addStudent(students, &count);
         saveDatabase(students, count);
     }
-    else if (strEqual(argv[1], "!delete")) {
+    else if (strEqual(argv[1], "delete")) {
         deleteStudent(students, &count);
         saveDatabase(students, count);
     }
-    else if (strEqual(argv[1], "!sort")) {
+    else if (strEqual(argv[1], "sort")) {
         char sortType[20];
         printf("\nAvailable sorts:\n");
         printf("- by alphabete\n");
@@ -78,12 +78,11 @@ int main(int argc, char *argv[]) {
         listStudents(students, count);
     }
     else {
-        printf("Unknown command. Type ./main !help\n");
+        printf("Unknown command. Type ./main help\n");
     }
 
     return 0;
 }
-
 
 void loadDatabase(struct Student students[], int *count) {
     FILE *f = fopen(DATABASE_FILE, "r");
@@ -249,13 +248,13 @@ void sortByGrade(struct Student students[], int count) {
 
 void showHelp() {
     printf("\n=== Commands ===\n");
-    printf("!help     — show available commands\n");
-    printf("!list     — show all students\n");
-    printf("!sort     — sort students (by alphabete, by grade, by yearborn)\n");
-    printf("!add      — add new student\n");
-    printf("!delete   — delete student by name and surname\n");
+    printf("help     — show available commands\n");
+    printf("list     — show all students\n");
+    printf("sort     — sort students (by alphabete, by grade, by yearborn)\n");
+    printf("add      — add new student\n");
+    printf("delete   — delete student by name and surname\n");
     printf("\nExamples:\n");
-    printf("  ./main !list\n");
-    printf("  ./main !add\n");
-    printf("  ./main !sort\n");
+    printf("  ./main list\n");
+    printf("  ./main add\n");
+    printf("  ./main sort\n");
 }
