@@ -237,7 +237,7 @@ void sortByBirthYear(struct Student students[], int count) {
 void sortByGrade(struct Student students[], int count) {
     for (int i = 0; i < count - 1; i++) {
         for (int j = 0; j < count - i - 1; j++) {
-            if (students[j].averageGrade < students[j + 1].averageGrade) {
+            if (students[j].averageGrade > students[j + 1].averageGrade) {
                 struct Student temp = students[j];
                 students[j] = students[j + 1];
                 students[j + 1] = temp;
@@ -245,6 +245,7 @@ void sortByGrade(struct Student students[], int count) {
         }
     }
 }
+
 
 void showHelp() {
     printf("\n=== Commands ===\n");
