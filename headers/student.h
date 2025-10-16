@@ -2,7 +2,7 @@
 #define STUDENT_H
 
 #define MAX_NAME 50
-#define FILENAME "students.txt"
+#define MAX_STUDENTS 100
 
 struct Student {
     char name[MAX_NAME];
@@ -11,13 +11,6 @@ struct Student {
     int classNumber;
     float averageGrade;
 };
-
-// Static array max size
-#define MAX_STUDENTS 100
-
-// File operations
-void saveToFile(struct Student students[], int count);
-void loadFromFile(struct Student students[], int *count);
 
 // Static array operations
 void listStudentsStatic(struct Student students[], int count);
@@ -31,7 +24,12 @@ void addStudentDynamic(struct Student **students, int *count, int *capacity);
 void deleteStudentDynamic(struct Student **students, int *count);
 void listStudentsDynamic(struct Student *students, int count);
 
-// Utility functions
+// Wrappers
+void listStudents(struct Student *students, int count);
+void addStudent(struct Student *students, int *count, int *capacity, int dynamic);
+void deleteStudent(struct Student *students, int *count, int *capacity, int dynamic);
+
+// Utility
 int strEqual(const char *a, const char *b);
 
 #endif
