@@ -5,7 +5,7 @@
 // ---------------- Utility ----------------
 int strEqual(const char *a, const char *b) {
     int i = 0;
-    while(a[i] && b[i]) {
+    while(a[i] && b[i]) { 
         if(a[i] != b[i]) return 0;
         i++;
     }
