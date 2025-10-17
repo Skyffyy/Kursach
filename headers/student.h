@@ -6,22 +6,20 @@
 #define MAX_PARENTS 100
 #define MAX_PARENTS_PER_STUDENT 2
 
-// Parent structure
 struct Parent {
     char name[MAX_NAME];
     char surname[MAX_NAME];
-    char personalID[20];  // unique identifier
+    char personalID[20];  
     char email[100];
     char phone[20];
     char birthDate[20];
     char gender[10];
 };
 
-// Student structure
 struct Student {
     char name[MAX_NAME];
     char surname[MAX_NAME];
-    char personalID[20];   // unique identifier
+    char personalID[20]; 
     char email[100];
     char phone[20];
     char birthDate[20];
@@ -31,7 +29,7 @@ struct Student {
     int birthYear;
 
     int parentCount;
-    char parentPersonalIDs[MAX_PARENTS_PER_STUDENT][20]; // links to parents
+    char parentPersonalIDs[MAX_PARENTS_PER_STUDENT][20];
 };
 
 // Utility
@@ -45,6 +43,9 @@ void deleteStudentStatic(struct Student students[], int *studentCount);
 // Dynamic array operations
 struct Student* createStudentArray(int initialCapacity);
 void freeStudentArray(struct Student *students);
+struct Parent* createParentArray(int initialCapacity);
+void freeParentArray(struct Parent *parents);
+
 void addStudentDynamic(struct Student **students, struct Parent **parents, int *studentCount, int *parentCount, int *capacity);
 void deleteStudentDynamic(struct Student **students, int *studentCount);
 void listStudentsDynamic(struct Student *students, struct Parent *parents, int studentCount, int parentCount);
