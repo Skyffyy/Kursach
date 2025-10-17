@@ -1,33 +1,52 @@
 #ifndef STUDENT_H
 #define STUDENT_H
 
-#define MAX_NAME 50
+#define MAX_NAME 100
 #define MAX_STUDENTS 100
+#define MAX_PARENTS 100
 
-struct Student {
+// Parent structure
+struct Parent {
+    int id;
     char name[MAX_NAME];
     char surname[MAX_NAME];
-    int birthYear;
-    int classNumber;
-    float averageGrade;
+    char personalID[20];
+    char email[100];
+    char phone[20];
+    char birthDate[20];
+    char gender[10];
 };
 
-// Static array operations
-void listStudentsStatic(struct Student students[], int count);
-void addStudentStatic(struct Student students[], int *count);
-void deleteStudentStatic(struct Student students[], int *count);
+// Student structure
+struct Student {
+    int id;
+    char name[MAX_NAME];
+    char surname[MAX_NAME];
+    char personalID[20];
+    char email[100];
+    char phone[20];
+    char birthDate[20];
+    char gender[10];
+    int parentCount;
+    int parentIDs[2];
+};
 
-// Dynamic array operations
+// Static array operations 
+void listStudentsStatic(struct Student students[], struct Parent parents[], int studentCount, int parentCount);
+void addStudentStatic(struct Student students[], struct Parent parents[], int *studentCount, int *parentCount);
+void deleteStudentStatic(struct Student students[], int *studentCount);
+
+// Dynamic array operations 
 struct Student* createStudentArray(int initialCapacity);
 void freeStudentArray(struct Student *students);
 void addStudentDynamic(struct Student **students, int *count, int *capacity);
 void deleteStudentDynamic(struct Student **students, int *count);
 void listStudentsDynamic(struct Student *students, int count);
 
-// Wrappers
+//  Wrappers 
 void listStudents(struct Student *students, int count);
-void addStudent(struct Student *students, int *count, int *capacity, int dynamic);
-void deleteStudent(struct Student *students, int *count, int *capacity, int dynamic);
+void addStudent(struct Student *students, struct Parent *parents, int *count, int *parentCount, int dynamic);
+void deleteStudent(struct Student *students, int *count, int *parentCount, int dynamic);
 
 // Utility
 int strEqual(const char *a, const char *b);
