@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "student.h"
 
-// ---------------- Utility ----------------
+// Utility 
 int strEqual(const char *a, const char *b) {
     int i = 0;
     while(a[i] && b[i]) { 
@@ -12,7 +12,7 @@ int strEqual(const char *a, const char *b) {
     return a[i] == b[i];
 }
 
-// ---------------- Static array ----------------
+//  Static array 
 void listStudentsStatic(struct Student students[], int count) {
     if(count==0){printf("Student list empty.\n"); return;}
     for(int i=0;i<count;i++){
@@ -53,7 +53,7 @@ void deleteStudentStatic(struct Student students[], int *count){
     if(!found) printf("Student %s %s not found.\n", name, surname);
 }
 
-// ---------------- Dynamic array ----------------
+//Dynamic array 
 struct Student* createStudentArray(int initialCapacity){
     struct Student *arr=(struct Student*)malloc(sizeof(struct Student)*initialCapacity);
     if(!arr){printf("Memory allocation failed.\n"); return NULL;}
@@ -108,7 +108,7 @@ void listStudentsDynamic(struct Student *students, int count){
     }
 }
 
-// ---------------- Wrappers ----------------
+// Wrappers 
 void listStudents(struct Student *students, int count){ listStudentsStatic(students,count); }
 void addStudent(struct Student *students, int *count, int *capacity, int dynamic){
     if(dynamic) addStudentDynamic(&students,count,capacity);
