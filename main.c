@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "student.h"
 #include "sort.h"
 #include "database.h"
@@ -19,10 +20,12 @@ void showHelp() {
 }
 
 int main(int argc, char *argv[]) {
-    // Статический массив студентов
     struct Student students[MAX_STUDENTS];
-    int count = 0;
-    loadDatabase(students, &count);
+    struct Parent parents[MAX_PARENTS];
+    int studentCount = 0;
+    int parentCount = 0;
+
+    loadDatabase(students, parents, &studentCount, &parentCount);
 
     if(argc < 2) {
         printf("Usage: ./main command\n");
@@ -34,61 +37,63 @@ int main(int argc, char *argv[]) {
         showHelp();
     }
     else if(strEqual(argv[1], "list")) {
-        listStudentsStatic(students, count);
+        listStudentsStatic(students, parents, studentCount, parentCount);
     }
     else if(strEqual(argv[1], "add")) {
-        addStudentStatic(students, &count);
-        saveDatabase(students, count);
+        addStudentStatic(students, parents, &studentCount, &parentCount);
+        saveDatabase(students, parents, studentCount, parentCount);
     }
     else if(strEqual(argv[1], "delete")) {
-        deleteStudentStatic(students, &count);
-        saveDatabase(students, count);
+        deleteStudentStatic(students, &studentCount);
+        saveDatabase(students, parents, studentCount, parentCount);
     }
     else if(strEqual(argv[1], "sort")) {
         char sortType[20];
-        printf("Enter sort type (name / grade / yearborn): ");
+        printf("Enter sort type (name / birth / grade): ");
         scanf("%19s", sortType);
 
-        if(strEqual(sortType, "name")) sortByName(students, count);
-        else if(strEqual(sortType, "grade")) sortByGrade(students, count);
-        else if(strEqual(sortType, "yearborn")) sortByBirthYear(students, count);
+        if(strEqual(sortType, "name")) sortByName(students, studentCount);
+        else if(strEqual(sortType, "birth")) sortByBirthYear(students, studentCount);
+        else if(strEqual(sortType, "grade")) sortByGrade(students, studentCount);
         else { printf("Unknown sort type.\n"); return 0; }
 
-        listStudentsStatic(students, count);
+        listStudentsStatic(students, parents, studentCount, parentCount);
     }
     else if(strEqual(argv[1], "dynamic")) {
-        // Динамический массив студентов
         int dynCount = 0;
+        int dynParentCount = 0;
         int dynCap = 2;
         struct Student *dynStudents = createStudentArray(dynCap);
-        if(!dynStudents) return 1;
+        struct Parent *dynParents = (struct Parent*)malloc(sizeof(struct Parent)*MAX_PARENTS);
+        if(!dynStudents || !dynParents) return 1;
 
         char cmd[20];
         printf("Dynamic array mode. Commands: add, delete, list, sort, exit\n");
+
         while(1) {
             printf("\nEnter command: ");
             scanf("%19s", cmd);
 
             if(strEqual(cmd, "add")) {
-                addStudentDynamic(&dynStudents, &dynCount, &dynCap);
+                addStudentDynamic(&dynStudents, &dynParents, &dynCount, &dynParentCount, &dynCap);
             }
             else if(strEqual(cmd, "delete")) {
                 deleteStudentDynamic(&dynStudents, &dynCount);
             }
             else if(strEqual(cmd, "list")) {
-                listStudentsDynamic(dynStudents, dynCount);
+                listStudentsDynamic(dynStudents, dynParents, dynCount, dynParentCount);
             }
             else if(strEqual(cmd, "sort")) {
                 char sortType[20];
-                printf("Enter sort type (name / grade / yearborn): ");
+                printf("Enter sort type (name / birth / grade): ");
                 scanf("%19s", sortType);
 
                 if(strEqual(sortType, "name")) sortByName(dynStudents, dynCount);
+                else if(strEqual(sortType, "birth")) sortByBirthYear(dynStudents, dynCount);
                 else if(strEqual(sortType, "grade")) sortByGrade(dynStudents, dynCount);
-                else if(strEqual(sortType, "yearborn")) sortByBirthYear(dynStudents, dynCount);
                 else { printf("Unknown sort type.\n"); continue; }
 
-                listStudentsDynamic(dynStudents, dynCount);
+                listStudentsDynamic(dynStudents, dynParents, dynCount, dynParentCount);
             }
             else if(strEqual(cmd, "exit")) {
                 break;
@@ -98,7 +103,8 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        freeStudentArray(dynStudents);
+        free(dynStudents);
+        free(dynParents);
     }
     else {
         printf("Unknown command. Use ./main help to see available commands.\n");
