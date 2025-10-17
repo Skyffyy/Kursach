@@ -36,19 +36,19 @@ void listStudentsStatic(struct Student students[], struct Parent parents[], int 
 void addStudentStatic(struct Student students[], struct Parent parents[], int *studentCount, int *parentCount);
 void deleteStudentStatic(struct Student students[], int *studentCount);
 
-// Dynamic array operations 
+//  Dynamic array operations 
 struct Student* createStudentArray(int initialCapacity);
 void freeStudentArray(struct Student *students);
-void addStudentDynamic(struct Student **students, int *count, int *capacity);
-void deleteStudentDynamic(struct Student **students, int *count);
-void listStudentsDynamic(struct Student *students, int count);
+void addStudentDynamic(struct Student **students, struct Parent **parents, int *studentCount, int *parentCount, int *capacity);
+void deleteStudentDynamic(struct Student **students, int *studentCount);
+void listStudentsDynamic(struct Student *students, struct Parent *parents, int studentCount, int parentCount);
 
-//  Wrappers 
-void listStudents(struct Student *students, int count);
-void addStudent(struct Student *students, struct Parent *parents, int *count, int *parentCount, int dynamic);
-void deleteStudent(struct Student *students, int *count, int *parentCount, int dynamic);
+//Wrappers 
+void listStudents(struct Student *students, struct Parent *parents, int studentCount, int parentCount);
+void addStudent(struct Student *students, struct Parent *parents, int *studentCount, int *parentCount, int dynamic, int *capacity);
+void deleteStudent(struct Student *students, int *studentCount, int *parentCount, int dynamic);
 
-// Utility
+// Utility 
 int strEqual(const char *a, const char *b);
 
 #endif
