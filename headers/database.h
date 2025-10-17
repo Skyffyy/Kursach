@@ -5,7 +5,8 @@
 
 #define DATABASE_FILE "database.txt"
 
-void loadDatabase(struct Student students[], int *count);
-void saveDatabase(struct Student students[], int count);
+// Updated functions with parents support
+void loadDatabase(struct Student students[], struct Parent parents[], int *studentCount, int *parentCount);
+void saveDatabase(struct Student students[], struct Parent parents[], int studentCount, int parentCount);
 
 #endif
