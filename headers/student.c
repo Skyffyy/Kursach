@@ -12,7 +12,7 @@ int strEqual(const char *a, const char *b){
     return a[i] == b[i];
 }
 
-// Static array functions
+// Static list
 void listStudentsStatic(struct Student students[], struct Parent parents[], int studentCount, int parentCount){
     if(studentCount==0){ printf("Student list empty.\n"); return; }
     for(int i=0;i<studentCount;i++){
@@ -29,8 +29,7 @@ void listStudentsStatic(struct Student students[], struct Parent parents[], int 
                         struct Parent p = parents[k];
                         printf("     - %s %s, Birth: %s, Email: %s, Phone: %s, Gender: %s\n",
                                p.name, p.surname, p.birthDate, p.email, p.phone, p.gender);
-                        found = 1;
-                        break;
+                        found = 1; break;
                     }
                 }
                 if(!found) printf("     - Parent ID %s not found\n", pid);
@@ -62,10 +61,9 @@ void addStudentStatic(struct Student students[], struct Parent parents[], int *s
         if(numParents>MAX_PARENTS_PER_STUDENT) numParents = MAX_PARENTS_PER_STUDENT;
 
         for(int i=0;i<numParents;i++){
-            if(*parentCount >= MAX_PARENTS){
-                printf("Parent database full.\n"); break;
-            }
+            if(*parentCount >= MAX_PARENTS){ printf("Parent database full.\n"); break; }
             struct Parent *p = &parents[*parentCount];
+
             printf("Parent %d first name: ", i+1); scanf("%49s", p->name);
             printf("Parent %d surname: ", i+1); scanf("%49s", p->surname);
             printf("Parent %d personal ID: ", i+1); scanf("%19s", p->personalID);
@@ -108,13 +106,11 @@ struct Student* createStudentArray(int initialCapacity){
     if(!arr){ printf("Memory allocation failed.\n"); return NULL; }
     return arr;
 }
-
 struct Parent* createParentArray(int initialCapacity){
     struct Parent *arr = malloc(sizeof(struct Parent)*initialCapacity);
     if(!arr){ printf("Memory allocation failed.\n"); return NULL; }
     return arr;
 }
-
 void freeStudentArray(struct Student *students){ free(students); }
 void freeParentArray(struct Parent *parents){ free(parents); }
 
@@ -124,6 +120,17 @@ void addStudentDynamic(struct Student **students, struct Parent **parents, int *
         struct Student *newArr = realloc(*students, sizeof(struct Student)*newCap);
         struct Parent *newParents = realloc(*parents, sizeof(struct Parent)*newCap);
         if(!newArr || !newParents){ printf("Memory allocation failed.\n"); return; }
-        *students = newArr; *parents = newParents; *capacity = newCap;
+        *students = newArr;
+        *parents = newParents;
+        *capacity = newCap;
     }
-    addStudentStatic(*students, *parents,
+    addStudentStatic(*students, *parents, studentCount, parentCount);
+}
+
+void deleteStudentDynamic(struct Student **students, int *studentCount){
+    deleteStudentStatic(*students, studentCount);
+}
+
+void listStudentsDynamic(struct Student *students, struct Parent *parents, int studentCount, int parentCount){
+    listStudentsStatic(students, parents, studentCount, parentCount);
+}
