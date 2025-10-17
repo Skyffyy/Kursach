@@ -3,79 +3,81 @@
 #include "student.h"
 
 // Utility
-int strEqual(const char *a, const char *b) {
+int strEqual(const char *a, const char *b){
     int i = 0;
-    while(a[i] && b[i]) { 
+    while(a[i] && b[i]){
         if(a[i] != b[i]) return 0;
         i++;
     }
     return a[i] == b[i];
 }
 
-// Static array
-void listStudentsStatic(struct Student students[], struct Parent parents[], int studentCount, int parentCount) {
-    if(studentCount==0){printf("Student list empty.\n"); return;}
+// Static array functions
+void listStudentsStatic(struct Student students[], struct Parent parents[], int studentCount, int parentCount){
+    if(studentCount==0){ printf("Student list empty.\n"); return; }
     for(int i=0;i<studentCount;i++){
         struct Student s = students[i];
-        printf("%d. %s %s, birth %s, email %s, phone %s, gender %s\n",
-               i+1, s.name, s.surname, s.birthDate, s.email, s.phone, s.gender);
-        printf("   Parents (%d):\n", s.parentCount);
-        for(int j=0;j<s.parentCount;j++){
-            int pid = s.parentIDs[j];
-            if(pid>0 && pid<=parentCount){
-                struct Parent p = parents[pid-1];
-                printf("      - %s %s, email %s, phone %s\n", p.name, p.surname, p.email, p.phone);
+        printf("%d. %s %s, Birth: %s, Email: %s, Phone: %s, Gender: %s, Grade: %.2f\n",
+               i+1, s.name, s.surname, s.birthDate, s.email, s.phone, s.gender, s.averageGrade);
+        if(s.parentCount > 0){
+            printf("   Parents:\n");
+            for(int j=0;j<s.parentCount;j++){
+                char *pid = s.parentPersonalIDs[j];
+                int found = 0;
+                for(int k=0;k<parentCount;k++){
+                    if(strEqual(parents[k].personalID, pid)){
+                        struct Parent p = parents[k];
+                        printf("     - %s %s, Birth: %s, Email: %s, Phone: %s, Gender: %s\n",
+                               p.name, p.surname, p.birthDate, p.email, p.phone, p.gender);
+                        found = 1;
+                        break;
+                    }
+                }
+                if(!found) printf("     - Parent ID %s not found\n", pid);
             }
         }
     }
 }
 
-int addParentInteractive(struct Parent parents[], int *parentCount){
-    if(*parentCount >= MAX_PARENTS){printf("Parent database full.\n"); return -1;}
-    struct Parent *p = &parents[*parentCount];
-    p->id = (*parentCount) + 1;
-
-    printf("Parent first name: "); scanf("%99s", p->name);
-    printf("Parent last name: "); scanf("%99s", p->surname);
-    printf("Personal ID: "); scanf("%19s", p->personalID);
-    printf("Email: "); scanf("%99s", p->email);
-    printf("Phone: "); scanf("%19s", p->phone);
-    printf("Birth date (YYYY-MM-DD): "); scanf("%19s", p->birthDate);
-    printf("Gender (M/F): "); scanf("%9s", p->gender);
-
-    (*parentCount)++;
-    printf("Parent added with ID %d\n", p->id);
-    return p->id;
-}
-
 void addStudentStatic(struct Student students[], struct Parent parents[], int *studentCount, int *parentCount){
-    if(*studentCount >= MAX_STUDENTS){printf("Student database full.\n"); return;}
+    if(*studentCount >= MAX_STUDENTS){ printf("Database full.\n"); return; }
     struct Student *s = &students[*studentCount];
-    s->id = (*studentCount)+1;
 
-    printf("Student first name: "); scanf("%99s", s->name);
-    printf("Student last name: "); scanf("%99s", s->surname);
+    printf("First name: "); scanf("%49s", s->name);
+    printf("Surname: "); scanf("%49s", s->surname);
     printf("Personal ID: "); scanf("%19s", s->personalID);
     printf("Email: "); scanf("%99s", s->email);
     printf("Phone: "); scanf("%19s", s->phone);
-    printf("Birth date (YYYY-MM-DD): "); scanf("%19s", s->birthDate);
-    printf("Gender (M/F): "); scanf("%9s", s->gender);
+    printf("Birth date: "); scanf("%19s", s->birthDate);
+    printf("Gender: "); scanf("%9s", s->gender);
+    printf("Average grade: "); scanf("%f", &s->averageGrade);
+    printf("Birth year: "); scanf("%d", &s->birthYear);
 
-    printf("How many parents (1 or 2): ");
-    scanf("%d", &s->parentCount);
-    if(s->parentCount<1) s->parentCount=1;
-    if(s->parentCount>2) s->parentCount=2;
+    printf("Does the student have parents? (0/1): ");
+    int hasParents; scanf("%d", &hasParents);
+    s->parentCount = 0;
+    if(hasParents){
+        int numParents = 0;
+        printf("How many parents? (1 or 2): "); scanf("%d", &numParents);
+        if(numParents>MAX_PARENTS_PER_STUDENT) numParents = MAX_PARENTS_PER_STUDENT;
 
-    for(int i=0;i<s->parentCount;i++){
-        printf("Is parent #%d already in system? (y/n): ", i+1);
-        char ans; scanf(" %c", &ans);
-        if(ans=='y'||ans=='Y'){
-            int pid;
-            printf("Enter parent ID: "); scanf("%d", &pid);
-            s->parentIDs[i] = pid;
-        } else {
-            int newID = addParentInteractive(parents, parentCount);
-            s->parentIDs[i] = newID;
+        for(int i=0;i<numParents;i++){
+            if(*parentCount >= MAX_PARENTS){
+                printf("Parent database full.\n"); break;
+            }
+            struct Parent *p = &parents[*parentCount];
+            printf("Parent %d first name: ", i+1); scanf("%49s", p->name);
+            printf("Parent %d surname: ", i+1); scanf("%49s", p->surname);
+            printf("Parent %d personal ID: ", i+1); scanf("%19s", p->personalID);
+            printf("Parent %d email: ", i+1); scanf("%99s", p->email);
+            printf("Parent %d phone: ", i+1); scanf("%19s", p->phone);
+            printf("Parent %d birth date: ", i+1); scanf("%19s", p->birthDate);
+            printf("Parent %d gender: ", i+1); scanf("%9s", p->gender);
+
+            s->parentCount++;
+            for(int k=0;k<20;k++) s->parentPersonalIDs[i][k] = p->personalID[k];
+
+            (*parentCount)++;
         }
     }
 
@@ -84,120 +86,44 @@ void addStudentStatic(struct Student students[], struct Parent parents[], int *s
 }
 
 void deleteStudentStatic(struct Student students[], int *studentCount){
-    if(*studentCount==0){printf("Database empty.\n"); return;}
-    char name[MAX_NAME], surname[MAX_NAME];
-    printf("Enter first name: "); scanf("%99s", name);
-    printf("Enter last name: "); scanf("%99s", surname);
-    int found=0;
+    if(*studentCount==0){ printf("Database empty.\n"); return; }
+    char pid[20];
+    printf("Enter student personal ID to delete: "); scanf("%19s", pid);
+    int found = 0;
     for(int i=0;i<*studentCount;i++){
-        if(strEqual(students[i].name,name) && strEqual(students[i].surname,surname)){
+        if(strEqual(students[i].personalID, pid)){
             for(int j=i;j<*studentCount-1;j++) students[j]=students[j+1];
             (*studentCount)--;
-            found=1;
-            printf("❌ Student %s %s deleted.\n", name, surname);
+            found = 1;
+            printf("Student deleted.\n");
             break;
         }
     }
-    if(!found) printf("Student %s %s not found.\n", name, surname);
+    if(!found) printf("Student not found.\n");
 }
 
-// Dynamic array 
+// Dynamic arrays
 struct Student* createStudentArray(int initialCapacity){
-    struct Student *arr=(struct Student*)malloc(sizeof(struct Student)*initialCapacity);
-    if(!arr){printf("Memory allocation failed.\n"); return NULL;}
+    struct Student *arr = malloc(sizeof(struct Student)*initialCapacity);
+    if(!arr){ printf("Memory allocation failed.\n"); return NULL; }
+    return arr;
+}
+
+struct Parent* createParentArray(int initialCapacity){
+    struct Parent *arr = malloc(sizeof(struct Parent)*initialCapacity);
+    if(!arr){ printf("Memory allocation failed.\n"); return NULL; }
     return arr;
 }
 
 void freeStudentArray(struct Student *students){ free(students); }
+void freeParentArray(struct Parent *parents){ free(parents); }
 
 void addStudentDynamic(struct Student **students, struct Parent **parents, int *studentCount, int *parentCount, int *capacity){
     if(*studentCount >= *capacity){
         int newCap = (*capacity)*2;
-        struct Student *newArr = (struct Student*)realloc(*students, sizeof(struct Student)*newCap);
-        if(!newArr){printf("Memory allocation failed.\n"); return;}
-        *students = newArr;
-        *capacity = newCap;
+        struct Student *newArr = realloc(*students, sizeof(struct Student)*newCap);
+        struct Parent *newParents = realloc(*parents, sizeof(struct Parent)*newCap);
+        if(!newArr || !newParents){ printf("Memory allocation failed.\n"); return; }
+        *students = newArr; *parents = newParents; *capacity = newCap;
     }
-
-    struct Student *s = &((*students)[*studentCount]);
-    s->id = (*studentCount)+1;
-
-    printf("Student first name: "); scanf("%99s", s->name);
-    printf("Student last name: "); scanf("%99s", s->surname);
-    printf("Personal ID: "); scanf("%19s", s->personalID);
-    printf("Email: "); scanf("%99s", s->email);
-    printf("Phone: "); scanf("%19s", s->phone);
-    printf("Birth date (YYYY-MM-DD): "); scanf("%19s", s->birthDate);
-    printf("Gender (M/F): "); scanf("%9s", s->gender);
-
-    printf("How many parents (1 or 2): ");
-    scanf("%d", &s->parentCount);
-    if(s->parentCount<1) s->parentCount=1;
-    if(s->parentCount>2) s->parentCount=2;
-
-    for(int i=0;i<s->parentCount;i++){
-        printf("Is parent #%d already in system? (y/n): ", i+1);
-        char ans; scanf(" %c", &ans);
-        if(ans=='y'||ans=='Y'){
-            int pid;
-            printf("Enter parent ID: "); scanf("%d", &pid);
-            s->parentIDs[i] = pid;
-        } else {
-            if(*parentCount >= MAX_PARENTS){
-                printf("Parent database full.\n"); s->parentIDs[i]=-1; continue;
-            }
-            struct Parent *p = &((*parents)[*parentCount]);
-            p->id = (*parentCount)+1;
-
-            printf("Parent first name: "); scanf("%99s", p->name);
-            printf("Parent last name: "); scanf("%99s", p->surname);
-            printf("Personal ID: "); scanf("%19s", p->personalID);
-            printf("Email: "); scanf("%99s", p->email);
-            printf("Phone: "); scanf("%19s", p->phone);
-            printf("Birth date (YYYY-MM-DD): "); scanf("%19s", p->birthDate);
-            printf("Gender (M/F): "); scanf("%9s", p->gender);
-
-            s->parentIDs[i] = p->id;
-            (*parentCount)++;
-            printf("Parent added with ID %d\n", p->id);
-        }
-    }
-
-    (*studentCount)++;
-    printf("✅ Student added (dynamic array with parents).\n");
-}
-
-void deleteStudentDynamic(struct Student **students, int *studentCount){
-    if(*studentCount==0){printf("Dynamic array empty.\n"); return;}
-    char name[MAX_NAME], surname[MAX_NAME];
-    printf("Enter first name: "); scanf("%99s", name);
-    printf("Enter last name: "); scanf("%99s", surname);
-    int found=0;
-    for(int i=0;i<*studentCount;i++){
-        if(strEqual((*students)[i].name,name) && strEqual((*students)[i].surname,surname)){
-            for(int j=i;j<*studentCount-1;j++) (*students)[j]=(*students)[j+1];
-            (*studentCount)--;
-            found=1;
-            printf("❌ Student %s %s deleted.\n", name, surname);
-            break;
-        }
-    }
-    if(!found) printf("Student %s %s not found.\n", name, surname);
-}
-
-void listStudentsDynamic(struct Student *students, struct Parent *parents, int studentCount, int parentCount){
-    if(studentCount==0){printf("Dynamic student list empty.\n"); return;}
-    for(int i=0;i<studentCount;i++){
-        struct Student s = students[i];
-        printf("%d. %s %s, birth %s, email %s, phone %s, gender %s\n",
-               i+1, s.name, s.surname, s.birthDate, s.email, s.phone, s.gender);
-        printf("   Parents (%d):\n", s.parentCount);
-        for(int j=0;j<s.parentCount;j++){
-            int pid = s.parentIDs[j];
-            if(pid>0 && pid<=parentCount){
-                struct Parent p = parents[pid-1];
-                printf("      - %s %s, email %s, phone %s\n", p.name, p.surname, p.email, p.phone);
-            }
-        }
-    }
-}
+    addStudentStatic(*students, *parents,
