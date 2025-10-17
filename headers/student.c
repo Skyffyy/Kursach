@@ -17,7 +17,7 @@ void listStudentsStatic(struct Student students[], struct Parent parents[], int 
     if(studentCount==0){ printf("Student list empty.\n"); return; }
     for(int i=0;i<studentCount;i++){
         struct Student s = students[i];
-        printf("%d. %s %s, Birth: %s, Email: %s, Phone: %s, Gender: %s, Grade: %.2f\n",
+        printf("%d. %s %s\n Birth: %s\n Email: %s\n Phone: %s\n Gender: %s\n Grade: %.2f\n",
                i+1, s.name, s.surname, s.birthDate, s.email, s.phone, s.gender, s.averageGrade);
         if(s.parentCount > 0){
             printf("   Parents:\n");
@@ -27,7 +27,7 @@ void listStudentsStatic(struct Student students[], struct Parent parents[], int 
                 for(int k=0;k<parentCount;k++){
                     if(strEqual(parents[k].personalID, pid)){
                         struct Parent p = parents[k];
-                        printf("     - %s %s, Birth: %s, Email: %s, Phone: %s, Gender: %s\n",
+                        printf("     - %s %s, Birth: %s\n Email: %s\n Phone: %s\n Gender: %s\n",
                                p.name, p.surname, p.birthDate, p.email, p.phone, p.gender);
                         found = 1; break;
                     }
