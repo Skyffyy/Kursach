@@ -12,7 +12,7 @@ void sortByAverageGrade(struct Student students[], int count);
 // Parent sorting
 void sortParentsByName(struct Parent parents[], int count);
 void sortParentsBySurname(struct Parent parents[], int count);
-void sortParentsByID(struct Parent parents[], int count);
+void sortParentsByPersonalID(struct Parent parents[], int count);
 
 // Utility
 int strCompare(const char *a, const char *b);
