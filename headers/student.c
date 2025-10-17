@@ -194,4 +194,10 @@ void listStudentsDynamic(struct Student *students, struct Parent *parents, int s
         printf("   Parents (%d):\n", s.parentCount);
         for(int j=0;j<s.parentCount;j++){
             int pid = s.parentIDs[j];
-            if(pid>0 && pid<=
+            if(pid>0 && pid<=parentCount){
+                struct Parent p = parents[pid-1];
+                printf("      - %s %s, email %s, phone %s\n", p.name, p.surname, p.email, p.phone);
+            }
+        }
+    }
+}
