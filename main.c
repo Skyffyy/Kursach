@@ -104,7 +104,6 @@ int main(int argc, char *argv[]){
         freeParentArray(dynParents);
     }
     else if(strEqual(argv[1], "parents")){
-        int cap = MAX_PARENTS;
         char cmd[20];
         while(1){
             printf("\nParent mode: list, add, delete, exit\nCommand: ");

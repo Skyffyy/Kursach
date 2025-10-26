@@ -1,30 +1,37 @@
+# Компилятор и флаги
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c99
-OBJ = main.o student.o parent.o database.o sort.o utils.o
+CFLAGS = -Wall -Iheaders
 TARGET = main
 
-all: $(TARGET)
+# Все исходные файлы
+SRC = main.c headers/database.c headers/student.c headers/parent.c headers/sort.c headers/utils.c
+OBJ = main.o database.o student.o parent.o sort.o utils.o
 
+# Основная цель
 $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ)
 
-main.o: main.c student.h parent.h database.h sort.h utils.h
-	$(CC) $(CFLAGS) -c main.c
+# Правила компиляции объектных файлов
+main.o: main.c
+	$(CC) $(CFLAGS) -c main.c -o main.o
 
-student.o: student.c student.h parent.h utils.h
-	$(CC) $(CFLAGS) -c student.c
+database.o: headers/database.c
+	$(CC) $(CFLAGS) -c headers/database.c -o database.o
 
-parent.o: parent.c parent.h student.h utils.h
-	$(CC) $(CFLAGS) -c parent.c
+student.o: headers/student.c
+	$(CC) $(CFLAGS) -c headers/student.c -o student.o
 
-database.o: database.c database.h student.h parent.h
-	$(CC) $(CFLAGS) -c database.c
+parent.o: headers/parent.c
+	$(CC) $(CFLAGS) -c headers/parent.c -o parent.o
 
-sort.o: sort.c sort.h student.h parent.h
-	$(CC) $(CFLAGS) -c sort.c
+sort.o: headers/sort.c
+	$(CC) $(CFLAGS) -c headers/sort.c -o sort.o
 
-utils.o: utils.c utils.h
-	$(CC) $(CFLAGS) -c utils.c
+utils.o: headers/utils.c
+	$(CC) $(CFLAGS) -c headers/utils.c -o utils.o
 
+# Очистка
 clean:
 	rm -f $(OBJ) $(TARGET)
+
+.PHONY: clean

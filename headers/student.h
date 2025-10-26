@@ -1,39 +1,43 @@
 #ifndef STUDENT_H
 #define STUDENT_H
 
-#include "parent.h"
-#define MAX_STUDENTS 100
+#include "constants.h"
+
+// Предварительное объявление struct Parent
+struct Parent;
 
 struct Student {
-    char name[50];
-    char surname[50];
-    char personalID[20];
-    char email[100];
-    char phone[20];
-    char birthDate[20];
-    char gender[10];
+    char name[MAX_NAME_LENGTH];
+    char surname[MAX_SURNAME_LENGTH];
+    char personalID[MAX_ID_LENGTH];
+    char email[MAX_EMAIL_LENGTH];
+    char phone[MAX_PHONE_LENGTH];
+    int birthDay;
+    int birthMonth;
+    int birthYear;
+    char gender[MAX_GENDER_LENGTH];
     float averageGrade;
 
     int parentCount;
-    char parentPersonalIDs[2][20];
+    char parentPersonalIDs[2][MAX_ID_LENGTH];
 };
 
 // Utility
 int strEqual(const char *a, const char *b);
 
 // Static
-void listStudentsStatic(struct Student students[], int studentCount,
-                        struct Parent parents[], int parentCount);
-void addStudentStatic(struct Student students[], int *studentCount,
-                      struct Parent parents[], int *parentCount);
-void deleteStudentStatic(struct Student students[], int *studentCount);
+void listStudentsStatic(struct Student *students, int studentCount,
+                        struct Parent *parents, int parentCount);
+void addStudentStatic(struct Student *students, int *studentCount,
+                      struct Parent *parents, int *parentCount);
+void deleteStudentStatic(struct Student *students, int *studentCount);
 
-// Dynamic
+// Dynamic - ИСПРАВЛЕНО: добавлены ** для указателей на указатели
 struct Student* createStudentArray(int initialCapacity);
 void freeStudentArray(struct Student *students);
-void addStudentDynamic(struct Student **students, struct Parent **parents,
+void addStudentDynamic(struct Student **students, struct Parent **parents,  // ИСПРАВЛЕНО: **
                        int *studentCount, int *parentCount, int *capacity);
-void deleteStudentDynamic(struct Student **students, int *studentCount);
+void deleteStudentDynamic(struct Student **students, int *studentCount);    // ИСПРАВЛЕНО: **
 void listStudentsDynamic(struct Student *students, int studentCount,
                          struct Parent *parents, int parentCount);
 

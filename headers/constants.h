@@ -1,0 +1,15 @@
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
+
+#define MAX_NAME_LENGTH 50
+#define MAX_SURNAME_LENGTH 50
+#define MAX_ID_LENGTH 20
+#define MAX_EMAIL_LENGTH 100
+#define MAX_PHONE_LENGTH 20
+#define MAX_GENDER_LENGTH 10
+
+#define MAX_STUDENTS 100
+#define MAX_PARENTS 100
+#define MAX_CHILDREN 10
+
+#endif

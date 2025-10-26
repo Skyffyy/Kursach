@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "student.h"
 #include "utils.h"
+#include "parent.h"
 
 struct Student* createStudentArray(int initialCapacity){
     struct Student *arr = malloc(sizeof(struct Student)*initialCapacity);
@@ -15,16 +16,29 @@ void listStudentsStatic(struct Student students[], int studentCount, struct Pare
     if(studentCount==0){ printf("No students\n"); return; }
     for(int i=0;i<studentCount;i++){
         struct Student s = students[i];
-        printf("%d. %s %s, ID: %s, Grade: %.2f\n", i+1, s.name, s.surname, s.personalID, s.averageGrade);
+        printf("\n%d. Student: %s %s\n", i+1, s.name, s.surname);
+        printf("   Personal ID: %s\n", s.personalID);
+        printf("   Email: %s\n", s.email);
+        printf("   Phone: %s\n", s.phone);
+        printf("   Birth Date: %02d.%02d.%d\n", s.birthDay, s.birthMonth, s.birthYear);
+        printf("   Gender: %s\n", s.gender);
+        printf("   Average Grade: %.2f\n", s.averageGrade);
+        
+        printf("   Parents:\n");
+        int displayedParents = 0;
         for(int j=0;j<s.parentCount;j++){
             char *pid = s.parentPersonalIDs[j];
             for(int k=0;k<parentCount;k++){
                 if(strEqual(parents[k].personalID,pid)){
-                    struct Parent p = parents[k];
-                    printf(" Parent: %s %s, ID: %s\n", p.name, p.surname, p.personalID);
+                    printf("     Parent %d:\n", displayedParents + 1);
+                    printParentInfo(&parents[k]);
+                    displayedParents++;
                     break;
                 }
             }
+        }
+        if(displayedParents == 0) {
+            printf("     No parents assigned\n");
         }
     }
 }
@@ -32,29 +46,54 @@ void listStudentsStatic(struct Student students[], int studentCount, struct Pare
 void addStudentStatic(struct Student students[], int *studentCount, struct Parent parents[], int *parentCount){
     if(*studentCount>=MAX_STUDENTS){ printf("Student database full\n"); return; }
     struct Student *s = &students[*studentCount];
+    
+    printf("=== Adding New Student ===\n");
     printf("Name: "); scanf("%49s", s->name);
     printf("Surname: "); scanf("%49s", s->surname);
-    printf("ID: "); scanf("%19s", s->personalID);
+    printf("Personal ID: "); scanf("%19s", s->personalID);
     printf("Email: "); scanf("%99s", s->email);
     printf("Phone: "); scanf("%19s", s->phone);
-    printf("BirthDate: "); scanf("%19s", s->birthDate);
+    
+    printf("Birth Day (1-31): "); scanf("%d", &s->birthDay);
+    printf("Birth Month (1-12): "); scanf("%d", &s->birthMonth);
+    printf("Birth Year: "); scanf("%d", &s->birthYear);
+    
     printf("Gender: "); scanf("%9s", s->gender);
     printf("Average Grade: "); scanf("%f", &s->averageGrade);
-    printf("Number of parents: "); scanf("%d", &s->parentCount);
+    
+    printf("Number of parents (0-2): "); scanf("%d", &s->parentCount);
+    if(s->parentCount > 2) s->parentCount = 2;
+    
     for(int i=0;i<s->parentCount;i++){
-        if(*parentCount>=MAX_PARENTS) break;
+        if(*parentCount>=MAX_PARENTS) {
+            printf("Cannot add more parents. Database full.\n");
+            break;
+        }
+        
+        printf("\n=== Adding Parent %d ===\n", i+1);
         struct Parent *p = &parents[*parentCount];
-        printf("Parent %d Name: ", i+1); scanf("%49s", p->name);
-        printf("Surname: "); scanf("%49s", p->surname);
-        printf("ID: "); scanf("%19s", p->personalID);
-        printf("Email: "); scanf("%99s", p->email);
-        printf("Phone: "); scanf("%19s", p->phone);
-        printf("BirthDate: "); scanf("%19s", p->birthDate);
-        printf("Gender: "); scanf("%9s", p->gender);
+        
+        printf("Parent Name: "); scanf("%49s", p->name);
+        printf("Parent Surname: "); scanf("%49s", p->surname);
+        printf("Parent Personal ID: "); scanf("%19s", p->personalID);
+        printf("Parent Email: "); scanf("%99s", p->email);
+        printf("Parent Phone: "); scanf("%19s", p->phone);
+        
+        printf("Parent Birth Day (1-31): "); scanf("%d", &p->birthDay);
+        printf("Parent Birth Month (1-12): "); scanf("%d", &p->birthMonth);
+        printf("Parent Birth Year: "); scanf("%d", &p->birthYear);
+        
+        printf("Parent Gender: "); scanf("%9s", p->gender);
+        p->childCount = 0;
+        
         strCopy(s->parentPersonalIDs[i], p->personalID);
+        linkParentToStudent(p, s->personalID);
+        
         (*parentCount)++;
+        printf("Parent added and linked to student!\n");
     }
     (*studentCount)++;
+    printf("=== Student added successfully! ===\n");
 }
 
 void deleteStudentStatic(struct Student students[], int *studentCount){

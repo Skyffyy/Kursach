@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "student.h": "c",
-        "random": "cpp"
+        "random": "cpp",
+        "parent.h": "c"
     }
 }
