@@ -2,7 +2,6 @@
 #define DATABASE_H
 
 #include "student.h"
-
 #define DATABASE_FILE "database.txt"
 
 void loadDatabase(struct Student students[], struct Parent parents[], int *studentCount, int *parentCount);
