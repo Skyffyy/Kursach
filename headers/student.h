@@ -22,9 +22,6 @@ struct Student {
     char parentPersonalIDs[2][MAX_ID_LENGTH];
 };
 
-// Utility
-int strEqual(const char *a, const char *b);
-
 // Static
 void listStudentsStatic(struct Student *students, int studentCount,
                         struct Parent *parents, int parentCount);
