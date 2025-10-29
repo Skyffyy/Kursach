@@ -1,4 +1,4 @@
-#A simple C program for managing students and their parents.  
+# A simple C program for managing students and their parents.  
 Supports both **static** and **dynamic** array modes with data saved in `database.txt`.
 
 ---
