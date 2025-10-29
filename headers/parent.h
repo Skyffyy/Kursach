@@ -31,11 +31,11 @@ void listParentsStatic(struct Parent *parents, int parentCount);
 void addParentStatic(struct Parent *parents, int *parentCount);
 void deleteParentStatic(struct Parent *parents, int *parentCount);
 
-// Dynamic - ИСПРАВЛЕНО: добавлены ** для указателей на указатели
+// Dynamic
 struct Parent* createParentArray(int initialCapacity);
 void freeParentArray(struct Parent *parents);
-void addParentDynamic(struct Parent **parents, int *parentCount, int *capacity);  // ИСПРАВЛЕНО: **
-void deleteParentDynamic(struct Parent **parents, int *parentCount);              // ИСПРАВЛЕНО: **
+void addParentDynamic(struct Parent **parents, int *parentCount, int *capacity);
+void deleteParentDynamic(struct Parent **parents, int *parentCount);
 
 // New functions
 void printParentInfo(struct Parent *parent);

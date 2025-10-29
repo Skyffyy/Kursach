@@ -11,5 +11,6 @@
 #define MAX_STUDENTS 100
 #define MAX_PARENTS 100
 #define MAX_CHILDREN 10
+#define MAX_CLASS_LENGTH 10
 
 #endif

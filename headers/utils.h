@@ -3,5 +3,6 @@
 
 int strEqual(const char *a, const char *b);
 void strCopy(char *dest, const char *src);
+int strCompare(const char *a, const char *b);
 
 #endif

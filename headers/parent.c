@@ -5,15 +5,24 @@
 #include "utils.h"
 
 void printParentInfo(struct Parent *parent) {
+    if(!parent) return;
     printf("       Name: %s %s\n", parent->name, parent->surname);
     printf("       Personal ID: %s\n", parent->personalID);
     printf("       Email: %s\n", parent->email);
     printf("       Phone: %s\n", parent->phone);
     printf("       Birth Date: %02d.%02d.%d\n", parent->birthDay, parent->birthMonth, parent->birthYear);
     printf("       Gender: %s\n", parent->gender);
+    if(parent->childCount > 0){
+        printf("       Children IDs:");
+        for(int i=0;i<parent->childCount;i++) printf(" %s", parent->childPersonalIDs[i]);
+        printf("\n");
+    } else {
+        printf("       Children: none\n");
+    }
 }
 
 void linkParentToStudent(struct Parent *parent, const char *studentID) {
+    if (!parent || !studentID) return;
     if (parent->childCount < MAX_CHILDREN) {
         strCopy(parent->childPersonalIDs[parent->childCount], studentID);
         parent->childCount++;
@@ -67,6 +76,17 @@ void addParentStatic(struct Parent parents[], int *parentCount){
     printf("Parent birth year: "); scanf("%d", &p->birthYear);
     printf("Parent gender: "); scanf("%9s", p->gender);
     p->childCount = 0;
+    int ccount = 0;
+    printf("Number of children to link (0-%d): ", MAX_CHILDREN);
+    if(scanf("%d", &ccount) != 1) ccount = 0;
+    if(ccount < 0) ccount = 0;
+    if(ccount > MAX_CHILDREN) ccount = MAX_CHILDREN;
+    for(int i=0;i<ccount;i++){
+        char cid[MAX_ID_LENGTH];
+        printf("Enter child %d personal ID: ", i+1);
+        scanf("%19s", cid);
+        strCopy(p->childPersonalIDs[p->childCount++], cid);
+    }
     (*parentCount)++;
     printf("✅ Parent added.\n");
 }

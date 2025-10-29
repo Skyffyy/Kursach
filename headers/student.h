@@ -12,6 +12,7 @@ struct Student {
     char personalID[MAX_ID_LENGTH];
     char email[MAX_EMAIL_LENGTH];
     char phone[MAX_PHONE_LENGTH];
+    char class[MAX_CLASS_LENGTH];
     int birthDay;
     int birthMonth;
     int birthYear;
@@ -28,13 +29,15 @@ void listStudentsStatic(struct Student *students, int studentCount,
 void addStudentStatic(struct Student *students, int *studentCount,
                       struct Parent *parents, int *parentCount);
 void deleteStudentStatic(struct Student *students, int *studentCount);
+void filterStudentStatic(struct Student *students, int studentCount,
+                         struct Parent *parents, int parentCount);
 
-// Dynamic - ИСПРАВЛЕНО: добавлены ** для указателей на указатели
+// Dynamic
 struct Student* createStudentArray(int initialCapacity);
 void freeStudentArray(struct Student *students);
-void addStudentDynamic(struct Student **students, struct Parent **parents,  // ИСПРАВЛЕНО: **
+void addStudentDynamic(struct Student **students, struct Parent **parents,
                        int *studentCount, int *parentCount, int *capacity);
-void deleteStudentDynamic(struct Student **students, int *studentCount);    // ИСПРАВЛЕНО: **
+void deleteStudentDynamic(struct Student **students, int *studentCount);
 void listStudentsDynamic(struct Student *students, int studentCount,
                          struct Parent *parents, int parentCount);
 

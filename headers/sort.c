@@ -1,15 +1,7 @@
 #include "sort.h"
 #include "student.h"
 #include "parent.h"
-
-int strCompare(const char *a, const char *b){
-    int i=0;
-    while(a[i] && b[i]){
-        if(a[i]!=b[i]) return a[i]-b[i];
-        i++;
-    }
-    return a[i]-b[i];
-}
+#include "utils.h"
 
 void sortByName(struct Student students[], int count){
     for(int i=0;i<count-1;i++)

@@ -12,6 +12,7 @@ void showHelp() {
     printf("list     — show all students\n");
     printf("add      — add new student\n");
     printf("delete   — delete student\n");
+    printf("filter   — filter for classes\n");
     printf("sort     — sort students\n");
     printf("dynamic  — work with dynamic array\n");
     printf("parents  — manage parents\n");
@@ -28,21 +29,15 @@ int main(int argc, char *argv[]){
         return 0;
     }
 
-    // Static arrays
     struct Student students[MAX_STUDENTS];
     struct Parent parents[MAX_PARENTS];
     int studentCount = 0;
     int parentCount = 0;
 
-    // Load database
     loadDatabase(students, parents, &studentCount, &parentCount);
 
-    if(strEqual(argv[1], "help")){
-        showHelp();
-    }
-    else if(strEqual(argv[1], "list")){
-        listStudentsStatic(students, studentCount, parents, parentCount);
-    }
+    if(strEqual(argv[1], "help")) showHelp();
+    else if(strEqual(argv[1], "list")) listStudentsStatic(students, studentCount, parents, parentCount);
     else if(strEqual(argv[1], "add")){
         addStudentStatic(students, &studentCount, parents, &parentCount);
         saveDatabase(students, parents, studentCount, parentCount);
@@ -51,45 +46,42 @@ int main(int argc, char *argv[]){
         deleteStudentStatic(students, &studentCount);
         saveDatabase(students, parents, studentCount, parentCount);
     }
+    else if(strEqual(argv[1], "filter")){
+        filterStudentStatic(students, studentCount, parents, parentCount);
+    }
     else if(strEqual(argv[1], "sort")){
         char sortType[20];
-        printf("Enter sort type (name / surname / grade): ");
+        printf("Enter sort type (name / surname / grade / year): ");
         scanf("%19s", sortType);
         if(strEqual(sortType,"name")) sortByName(students, studentCount);
         else if(strEqual(sortType,"surname")) sortBySurname(students, studentCount);
         else if(strEqual(sortType,"grade")) sortByAverageGrade(students, studentCount);
+        else if(strEqual(sortType,"year")) sortByBirthYear(students, studentCount);
         else { printf("Unknown sort type.\n"); return 0; }
         listStudentsStatic(students, studentCount, parents, parentCount);
     }
     else if(strEqual(argv[1], "dynamic")){
-        int dynCap = 2;
+        int dynCap = 4;
         int dynStudentCount = 0, dynParentCount = 0;
         struct Student *dynStudents = createStudentArray(dynCap);
         struct Parent *dynParents = createParentArray(dynCap);
         if(!dynStudents || !dynParents) return 1;
-
         char cmd[20];
         printf("Dynamic mode. Commands: add, delete, list, sort, exit\n");
         while(1){
             printf("\nEnter command: ");
             scanf("%19s", cmd);
-
-            if(strEqual(cmd,"add")){
-                addStudentDynamic(&dynStudents, &dynParents, &dynStudentCount, &dynParentCount, &dynCap);
-            }
-            else if(strEqual(cmd,"delete")){
-                deleteStudentDynamic(&dynStudents, &dynStudentCount);
-            }
-            else if(strEqual(cmd,"list")){
-                listStudentsDynamic(dynStudents, dynStudentCount, dynParents, dynParentCount);
-            }
+            if(strEqual(cmd,"add")) addStudentDynamic(&dynStudents, &dynParents, &dynStudentCount, &dynParentCount, &dynCap);
+            else if(strEqual(cmd,"delete")) deleteStudentDynamic(&dynStudents, &dynStudentCount);
+            else if(strEqual(cmd,"list")) listStudentsDynamic(dynStudents, dynStudentCount, dynParents, dynParentCount);
             else if(strEqual(cmd,"sort")){
-                char sortType[20];
-                printf("Enter sort type (name / surname / grade): ");
-                scanf("%19s", sortType);
-                if(strEqual(sortType,"name")) sortByName(dynStudents, dynStudentCount);
-                else if(strEqual(sortType,"surname")) sortBySurname(dynStudents, dynStudentCount);
-                else if(strEqual(sortType,"grade")) sortByAverageGrade(dynStudents, dynStudentCount);
+                char sType[20];
+                printf("Enter sort type (name / surname / grade / year): ");
+                scanf("%19s", sType);
+                if(strEqual(sType,"name")) sortByName(dynStudents, dynStudentCount);
+                else if(strEqual(sType,"surname")) sortBySurname(dynStudents, dynStudentCount);
+                else if(strEqual(sType,"grade")) sortByAverageGrade(dynStudents, dynStudentCount);
+                else if(strEqual(sType,"year")) sortByBirthYear(dynStudents, dynStudentCount);
                 else { printf("Unknown sort type.\n"); continue; }
                 listStudentsDynamic(dynStudents, dynStudentCount, dynParents, dynParentCount);
             }
@@ -99,14 +91,13 @@ int main(int argc, char *argv[]){
             }
             else printf("Unknown command.\n");
         }
-
         freeStudentArray(dynStudents);
         freeParentArray(dynParents);
     }
     else if(strEqual(argv[1], "parents")){
         char cmd[20];
         while(1){
-            printf("\nParent mode: list, add, delete, exit\nCommand: ");
+            printf("\nParent mode: list, add, delete, show, exit\nCommand: ");
             scanf("%19s", cmd);
             if(strEqual(cmd,"list")) listParentsStatic(parents, parentCount);
             else if(strEqual(cmd,"add")){
@@ -117,11 +108,16 @@ int main(int argc, char *argv[]){
                 deleteParentStatic(parents, &parentCount);
                 saveDatabase(students, parents, studentCount, parentCount);
             }
+            else if(strEqual(cmd,"show")){
+                char pid[20];
+                printf("Enter parent ID: "); scanf("%19s", pid);
+                showParentAndChildren(parents, parentCount, students, studentCount, pid);
+            }
             else if(strEqual(cmd,"exit")) break;
             else printf("Unknown command.\n");
         }
     }
-    else{
+    else {
         printf("Unknown command. Use ./main help\n");
     }
 
